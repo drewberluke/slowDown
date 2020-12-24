@@ -1,0 +1,50 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Cardo|Josefin+Sans|Mansalva&display=swap" rel="stylesheet">
+    <script src="{% static 'js/client.js' %}" type="text/javascript"></script>
+    <title>SLOW DOWN DR. GASKIN</title>
+</head>
+
+<body>
+    <header>
+        <div class="menu-bar">
+            <nav>
+                <ul>
+                    <li><a class="li-hover" href="https://gaskination.com/">Back to Gaskination</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <p id="wait">Click here if you would like Dr. Gaskin to slow down</p>
+        <!--button, when the user clicks here the hidden form is submitted to increase the count-->
+        <div id="wrapper">
+            <a class="my-super-cool-btn" onclick="submitForm()">
+                <div class="dots-container">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <span id="counter">Slow down please</span>
+            </a>
+        </div>
+    </main>
+    <footer>
+        <!--hidden form that gets submitted via javascript when the user clicks the button-->
+        <form action="{% url 'addWait' %}" method="POST" style="display: none;" id="/incrementCount">
+            {% csrf_token %}
+            <input type="submit" value="Submit">
+        </form>
+    </footer>
+</body>
+
+</html>

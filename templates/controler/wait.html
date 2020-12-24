@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Cardo|Josefin+Sans|Mansalva&display=swap" rel="stylesheet">
+    <script src="{% static 'js/client.js' %}" type="text/javascript"></script>
+    <title>SLOW DOWN DR. GASKIN</title>
+</head>
+<!--runs the deactivate function when loaded which deactivates the button and starts the timer, the function sends them back to index.ejs once it is over-->
+
+<body onload="inactive()">
+    <header>
+        <div class="menu-bar">
+            <nav>
+                <ul>
+                    <li><a class="li-hover" href="../index.html">Back to Gaskination</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <p id="wait">Click here if you would like Dr. Gaskin to slow down</p>
+        <div id="wrapper">
+            <a class="my-super-cool-btn">
+                <div class="dots-container">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+                <span id="counter">Slow down please</span>
+            </a>
+        </div>
+    </main>
+    <footer>
+        <form action="{% url 'index' %}" method="GET" style="display: none;" id="/back">
+            {% csrf_token %}
+            <input type="submit" value="Submit">
+        </form>
+    </footer>
+</body>
+
+</html>
