@@ -29,10 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 ## for use when publishing to heroku
-# SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # only for use durring development, delete before publishing to heroku 
-SECRET_KEY = 'kd_vc4-3in^lggobzv5wf=glm6!iso4^c93s^-c7@9qtc1j3m%'
+# secret key goes here durring development
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')   
 
@@ -92,27 +92,31 @@ WSGI_APPLICATION = 'slowDown.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-## Live database to be used when hosted on heroku
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'slow',
-#         'USER': 'postgres',
-#         'PASSWORD': 'tjena',
-#         'HOST': 'localhost',
-#     }
-# }
-
-# heroku rds database connection only use to edit production database in development environment
+# Live database to be used when hosted on heroku
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd5qhc2lvu2nnal',
-        'USER': 'bpypthdkfigxpk',
-        'PASSWORD': 'cd10eea4b917455bb60eabc680b922178781d3b66b57caa1fca03f51e5d4fafe',
-        'HOST': 'ec2-54-85-13-135.compute-1.amazonaws.com',
+        'NAME': 'slow',
+        'USER': 'postgres',
+        'PASSWORD': 'tjena',
+        'HOST': 'localhost',
     }
 }
+
+# uncomment when publishing to heroku
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
+
+# # heroku rds database connection only use to edit production database in development environment
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'd5qhc2lvu2nnal',
+#         'USER': 'bpypthdkfigxpk',
+#         'PASSWORD': 'cd10eea4b917455bb60eabc680b922178781d3b66b57caa1fca03f51e5d4fafe',
+#         'HOST': 'ec2-54-85-13-135.compute-1.amazonaws.com',
+#     }
+# }
 
 # # local postgres connection for development
 # DATABASES = {
@@ -121,11 +125,6 @@ DATABASES = {
 #         'NAME': BASE_DIR / 'db.sqlite3'
 #     }
 # }
-
-## uncomment when publishing to heroku
-# db_from_env = dj_database_url.config(conn_max_age=600)
-# DATABASES['default'].update(db_from_env)
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
