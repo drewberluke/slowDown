@@ -13,7 +13,7 @@
     <script src="{% static 'js/client.js' %}" type="text/javascript"></script>
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body>
+<body {% block cutoff %}{% endblock %}>
     {% block content %}
     {% endblock %}
 </body>

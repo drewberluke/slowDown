@@ -3,6 +3,8 @@
 
 {% block title %}Admin{% endblock %}
 
+{% block cutoff %}onload="cutoff()"{% endblock %}
+
 {% block content%}
 
 {% if user.is_authenticated %}
@@ -51,7 +53,7 @@
 
     // alert sound used asynchronous function so that the sound will play before other scripts take over
     async function playAlert() {
-        var audio = new Audio("{% static 'media/sound.mp3' %}");
+        var audio = new Audio('{% static 'media/sound.mp3' %}');
         audio.play();
         await new Promise((resolve, reject) => setTimeout(resolve, 3000));
         alert({{count.count}} + ' or more people have requested that you slow down');
