@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin{% endblock %}
+
+{% block content%}
+
+{% if user.is_authenticated %}
+<header>
+    <div class="menu-bar">
+        <nav>
+            <ul style="flex-direction: row-reverse">
+                <li><a class="li-hover logout" href="/logout" >Logout</a></li>
+                <li><a class="li-hover logout" href="/django-admin">Settings</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<main onload="cutoff()">
+    <div>
+        <p class="text-center">Current number of requests</p>
+        <p class="current-req" id="clickCount">{{count.count}}</p>
+    </div>  
+    <!--sends the /delete form which deletes all records and reloads the page-->
+    <div class="margin">
+        <form action="{% url 'resetRequestCount' %}" method="POST" id="/delete" class="reset">
+            {% csrf_token %}
+            <div class="btn btn-one" onclick="reset()">
+                <p class="btn-text">Reset Requests</p>
+            </div>
+        </form>
+    </div>
+
+    <!--CHANGE CUTOFF THRESHOLD HERE!! change the value here to allow for more or less clicks before being alerted-->
+    <div class="margin">
+        <form action="{% url 'changeThreshold' %}" method="GET" class="text-center" id="thresh">
+            {% csrf_token %}
+            <p class="text-center" for="cutoff">The current cutoff threshold is:  <u style="margin-left: .5rem;" id="limit">{{threshold.threshold}}</u></p>
+            <input id="newLimit" class="thresh-input" name='limit' type="number" min="0" placeholder="Change threshold here">
+            <div class="btn btn-one" onclick="thresh()">
+                <p class="btn-text">Submit</p>
+            </div>
+        </form>
+    </div>
+</main>
+<!--Reloads this page every 10 seconds (can be adjusted here for more or less time) in order to keep an accurate count-->
+<script>
+    //setTimeout(function () {
+        location.reload();
+    }, 10000);
+
+    // alert sound used asynchronous function so that the sound will play before other scripts take over
+    async function playAlert() {
+        var audio = new Audio("{% static 'media/sound.mp3' %}");
+        audio.play();
+        await new Promise((resolve, reject) => setTimeout(resolve, 3000));
+        alert({{count.count}} + ' or more people have requested that you slow down');
+    }
+</script>
+
+{% else %}
+
+    <p><a class="li-hover login">Log In</a></p>
+
+{% endif %}
+
+{% endblock %}

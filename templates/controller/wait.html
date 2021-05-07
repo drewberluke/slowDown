@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Slow Down{% endblock %}
+
+{% block content %}
+
+<header>
+    <div class="menu-bar">
+        <nav>
+            <ul>
+                <li><a class="li-hover" href="https://is201.gaskination.com/" target="_blank">IS 201 Discussion
+                        Forum</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<main onload="inactive()">
+    <p id="wait">Please wait before requesting again</p>
+    <div id="wrapper">
+        <a class="my-super-cool-btn">
+            <div class="dots-container">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <span id="counter">{{rem}}</span>
+        </a>
+    </div>
+</main>
+<footer>
+    <form action="{% url 'index' %}" method="GET" style="display: none;" id="/back">
+        {% csrf_token %}
+        <input type="submit" value="Submit">
+    </form>
+    
+</footer>
+
+<script>
+    var seconds = {{rem}}
+
+    var counter = setInterval(timer, 1000);
+
+    function timer() {
+        seconds = seconds - 1;
+        if (seconds <= -1) {
+            clearInterval(counter);
+            return;
+        }
+        document.getElementById('counter').innerHTML = seconds;
+
+        if (seconds == 0) {
+            document.forms['/back'].submit();
+        }
+    }
+</script>
+
+{% endblock %}

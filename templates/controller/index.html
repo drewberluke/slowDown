@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Slow Down{% endblock %}
+
+{% block content %}
+
+<header>
+    <div class="menu-bar">
+        <nav>
+            <ul>
+                <li><a class="li-hover" href="https://is201.gaskination.com/" target="_blank">IS 201 Discussion Forum</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<main>
+    <p id="wait">Click below if you would like Dr. Gaskin to slow down</p>
+    <!--button, when the user clicks here the hidden form is submitted to increase the count-->
+    <div id="wrapper">
+        <a class="my-super-cool-btn" onclick="submitForm()">
+            <div class="dots-container">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <span id="counter">Slow down please</span>
+        </a>
+    </div>
+</main>
+<footer style="display: none;">
+    <!--hidden form that gets submitted via javascript when the user clicks the button-->
+    <form action="{% url 'addWait' %}" method="POST" id="/incrementCount">
+        {% csrf_token %}
+        <input type="submit" value="Submit">
+    </form>
+</footer>
+
+{% endblock %}

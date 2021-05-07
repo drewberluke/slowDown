@@ -1,3 +1,7 @@
+# Created by Andrew Luke 
+# andrew.luke@byu.edu
+# May 2021
+
 """
 Django settings for slowDown project.
 
@@ -23,7 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+
+## for use when publishing to heroku
+# SECRET_KEY = os.environ.get('SECRET_KEY')
+
+# only for use durring development, delete before publishing to heroku 
+SECRET_KEY = 'kd_vc4-3in^lggobzv5wf=glm6!iso4^c93s^-c7@9qtc1j3m%'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')   
 
@@ -42,8 +51,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'controler.apps.ControlerConfig',
+    'controller.apps.ControllerConfig',
+    'register.apps.RegisterConfig',
     'whitenoise.runserver_nostatic',
+    'crispy_forms'
 ]
 
 MIDDLEWARE = [
@@ -81,18 +92,39 @@ WSGI_APPLICATION = 'slowDown.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+## Live database to be used when hosted on heroku
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'slow',
+#         'USER': 'postgres',
+#         'PASSWORD': 'tjena',
+#         'HOST': 'localhost',
+#     }
+# }
+
+# heroku rds database connection only use to edit production database in development environment
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'slow',
-        'USER': 'postgres',
-        'PASSWORD': 'tjena',
-        'HOST': 'localhost',
+        'NAME': 'd5qhc2lvu2nnal',
+        'USER': 'bpypthdkfigxpk',
+        'PASSWORD': 'cd10eea4b917455bb60eabc680b922178781d3b66b57caa1fca03f51e5d4fafe',
+        'HOST': 'ec2-54-85-13-135.compute-1.amazonaws.com',
     }
 }
 
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES['default'].update(db_from_env)
+# # local postgres connection for development
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3'
+#     }
+# }
+
+## uncomment when publishing to heroku
+# db_from_env = dj_database_url.config(conn_max_age=600)
+# DATABASES['default'].update(db_from_env)
 
 
 # Password validation
@@ -141,3 +173,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 django_heroku.settings(locals())
+
+CRISPY_TEMPLATE_PACK='bootstrap4'
+
+LOGIN_REDIRECT_URL = '/admin'
+LOGOUT_REDIRECT_URL = '/login'

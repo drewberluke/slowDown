@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+# from register import views as v # only needed for register path 
 
 urlpatterns = [
     path('django-admin/', admin.site.urls),
-    path('', include('controler.urls')),
+    path('', include('controller.urls')),
+    # path('register/', v.register, name='register'), # commented to prevent students from registering an account
+    path('', include('django.contrib.auth.urls')),
 ]

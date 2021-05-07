@@ -2,6 +2,38 @@
   box-sizing: border-box;
 }
 
+.logout {
+  float: right;
+}
+
+.login {
+  color: #F3CF14;
+}
+
+.login-form {
+  width: 40%;
+  margin: auto;
+  color: #F3CF14;
+}
+
+.login-form button {
+  color: #F3CF14;
+  font-family: 'Cardo', serif;
+  font-size: 2rem;
+  line-height: 2rem;
+  margin-left: 20.5%;
+  margin-right: 20.5%;
+  margin-top: 5%;
+}
+
+.login-form button:hover{
+  color: #F3CF14;
+}
+
+.login:visited {
+  color:#F3CF14;
+}
+
 body {
   height: 100vh;
 }
@@ -77,10 +109,10 @@ input, select, textarea{
 
 .current-req{
   border: 1px solid rgba(255, 255, 255, 0.5);
-  width: 9vw;
-  height: 9vw;
+  width: 4.5rem;
+  height: 4.5rem;
+  line-height: 4.5rem;
   margin: auto;
-  line-height: 180%;
 }
 
 .reset{
@@ -232,7 +264,7 @@ body{
   font-family: 'Montserrat', sans-serif;
 }
 #wrapper{
-  height:35rem;
+  height:25rem;
   box-sizing:border-box;
   display:flex;
   align-items:center;
