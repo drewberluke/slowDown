@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'slowDown.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# Live database to be used when hosted on heroku
+# production datbase connection for use only when app is in production (deployed to heroku)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -104,7 +104,7 @@ DATABASES = {
     }
 }
 
-# uncomment when publishing to heroku
+# production database connection helpers
 db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
 

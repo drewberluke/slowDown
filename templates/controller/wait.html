@@ -30,10 +30,10 @@
     </div>
 </main>
 <footer>
-    <form action="{% url 'index' %}" method="GET" style="display: none;" id="/back">
+    <!-- <form action="{% url 'index' %}" method="GET" style="display: none;" id="/back">
         {% csrf_token %}
         <input type="submit" value="Submit">
-    </form>
+    </form> -->
     
 </footer>
 
@@ -51,7 +51,8 @@
         document.getElementById('counter').innerHTML = seconds;
 
         if (seconds == 0) {
-            document.forms['/back'].submit();
+            //document.forms['/back'].submit();
+            window.location.href = '/';
         }
     }
 </script>
