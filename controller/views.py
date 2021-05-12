@@ -1,7 +1,7 @@
 import time
 import math 
 from django.shortcuts import render, redirect
-from .models import requestCount, threshold
+from .models import requestCount, threshold, requestReset
 
 # index page view
 # when the user navigates to the root directory the view will check for a cookie called allowReload
@@ -50,31 +50,94 @@ def addAndWait(response):
 # this function pulls the current requests and the threshold from the database and sends them when the admin page is rendered 
 # the admin page is only shown if the user is logged in, if not logged in the user is redirected to the login page 
 def adminPageView(request):
-    if (request.user.is_authenticated):
-        count = requestCount.objects.get(id=1)
-        limit = threshold.objects.get(id=1)
-        return render(request, 'controller/admin.html', {'count':count, 'threshold': limit})
-    else:
-        return redirect('/login/')
+    try:
+        if (request.user.is_authenticated):
+            timeToReset = int(request.COOKIES['resetTime']) - int(time.time())
+            resetSetting = requestReset.objects.get(id=1).requestReset
+            count = requestCount.objects.get(id=1)
+            limit = threshold.objects.get(id=1)
+            return render(request, 'controller/admin.html', {'count':count, 'threshold': limit, 'timeToReset': timeToReset, 'resetSetting': resetSetting})
+        else:
+            return redirect('/login/')
+    except KeyError:
+        if (request.user.is_authenticated):
+            resetSetting = requestReset.objects.get(id=1).requestReset
+            count = requestCount.objects.get(id=1)
+            limit = threshold.objects.get(id=1)
+            currentTime = time.time()
+            expirationTime = currentTime + resetSetting
+            cookieValue = int(expirationTime)
+            resp = render(request, 'controller/admin.html', {'count':count, 'threshold': limit, 'timeToReset': resetSetting, 'resetSetting': resetSetting})
+            resp.set_cookie('resetTime', cookieValue, max_age=resetSetting)
+            return resp
+        else:
+            return redirect('/login/')
 
 # this function is called when the count exceeds the threshold or the admin wants to reset the count to 0
 def resetRequestCount(response):
-    if response.method == 'POST':
-        requests = requestCount.objects.get(id=1)
-        requests.count = 0
-        requests.save()
-        return redirect('admin')
+    if (response.user.is_authenticated):
+        if response.method == 'GET':
+            requests = requestCount.objects.get(id=1)
+            requests.count = 0
+            requests.save()
+            resetSetting = requestReset.objects.get(id=1).requestReset
+            currentTime = time.time()
+            expirationTime = currentTime + resetSetting
+            cookieValue = int(expirationTime)
+            resp = redirect('admin')
+            resp.set_cookie('resetTime', cookieValue, max_age=resetSetting)
+            return resp
+        else:
+            return redirect('admin')
     else:
-        return redirect('admin')
+        return redirect('/login/')
 
 # this function receives a new value from the user and makes that value the new threshold
 def changeThreshold(request):
-    if request.GET['limit'] == '':
-        return redirect('admin')
+    if (request.user.is_authenticated):
+        if request.GET['limit'] == '':
+            return redirect('admin')
+        else:
+            limit = threshold.objects.get(id=1)
+            newLimit = int(request.GET['limit'])
+            newLimit = math.floor(newLimit)
+            limit.threshold = newLimit
+            limit.save()
+            return redirect('admin')
     else:
-        limit = threshold.objects.get(id=1)
-        newLimit = int(request.GET['limit'])
-        newLimit = math.floor(newLimit)
-        limit.threshold = newLimit
-        limit.save()
-        return redirect('admin')
+        return redirect('/login/')
+
+def changeResetSetting(request):
+    if (request.user.is_authenticated):
+        if request.GET['setting'] == '':
+            return redirect('admin')
+        else:
+            setting = requestReset.objects.get(id=1)
+            newSetting = int(request.GET['setting'])
+            newSetting = math.floor(newSetting)
+            setting.requestReset = newSetting
+            setting.save()
+            resp = redirect('admin')
+            resetSetting = requestReset.objects.get(id=1).requestReset
+            currentTime = time.time()
+            expirationTime = currentTime + resetSetting
+            cookieValue = int(expirationTime)
+            resp = redirect('admin')
+            resp.set_cookie('resetTime', cookieValue, max_age=resetSetting)
+            return resp
+    else: 
+        return redirect('/login/')
+
+def resetTimer(request):
+    if (request.user.is_authenticated):
+        resp = redirect('admin')
+        resetSetting = requestReset.objects.get(id=1).requestReset
+        currentTime = time.time()
+        expirationTime = currentTime + resetSetting
+        cookieValue = int(expirationTime)
+        resp = redirect('admin')
+        resp.set_cookie('resetTime', cookieValue, max_age=resetSetting)
+        return resp
+    else:
+        return redirect('/login/')
+        

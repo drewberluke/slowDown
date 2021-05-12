@@ -93,6 +93,23 @@ function thresh() {
     }    
 }
 
+function resetSetting() {
+    var setting = parseFloat(document.getElementById('setting').value);
+    if (Number.isInteger(setting)) {
+        document.getElementById('resetSetting').submit();
+    } else {
+        alert("Please enter a whole number");
+        setting = Math.floor(setting);
+        document.getElementById('setting').value = setting;
+        document.getElementById('setting').focus();
+    }
+    
+}
+
 function reset() {
     document.getElementById('/delete').submit()
+}
+
+function resetTimer() {
+    document.getElementById('resetTimer').submit()
 }

@@ -16,7 +16,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url
+# import dj_database_url
 import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,11 +28,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-## for use when publishing to heroku
+# for use when publishing to heroku
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # only for use durring development, delete before publishing to heroku 
-# secret key goes here durring development
+
+    # secret key goes here durring development
 
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')   

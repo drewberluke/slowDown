@@ -15,3 +15,10 @@ class threshold(models.Model):
 
     def __str__(self):
         return self.threshold
+
+class requestReset(models.Model):
+    requestReset = models.IntegerField(default=160)
+
+    def __str__(self):
+        return self.requestReset
+
