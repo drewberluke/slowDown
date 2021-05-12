@@ -1,7 +1,7 @@
 import time
 import math 
 from django.shortcuts import render, redirect
-from .models import requestCount, threshold, requestReset
+from .models import requestCount, threshold, requestReset, studentWaitTime
 
 # index page view
 # when the user navigates to the root directory the view will check for a cookie called allowReload
@@ -10,40 +10,50 @@ from .models import requestCount, threshold, requestReset
 # if the cookie is present then the wait page is loaded and the current time is subtracted from the expiration to
 # determine how much longer the user needs to wait, that value is passed into the view to be displayed
 # if the cookie does not exist then the index page is rendered as usual 
+# if a csrf error is thrown it will redirect to itself which will refresh and renew the token
 def indexPageView(request):
     try:
-        remaining = int(request.COOKIES['allowReload']) - int(time.time()) # check for cookie, calculate the wait time remaining
-        context = {'rem': remaining} # set the number of seconds left equal to rem in the context to be sent to the template 
-        return render(request, 'controller/wait.html', context) # render the template and send the time remaining to be displayed on the wait page
-    except KeyError: # if a key error exception is thrown that means there is no cookie so the index page is displayed normally 
-        return render(request, 'controller/index.html')
+        try:
+            remaining = int(request.COOKIES['allowReload']) - int(time.time()) # check for cookie, calculate the wait time remaining
+            context = {'rem': remaining} # set the number of seconds left equal to rem in the context to be sent to the template 
+            return render(request, 'controller/wait.html', context) # render the template and send the time remaining to be displayed on the wait page
+        except KeyError: # if a key error exception is thrown that means there is no cookie so the index page is displayed normally 
+            return render(request, 'controller/index.html')
+    except:
+        return redirect('index')
 
 # wait page view
 # this view should only be called if the response method is post, there is no other circumstance where this should be called 
 # when called the function looks for the cookie and renders the wait page with the time remaining if the cookie exists
 # if the cookie does not exist the key error exception is thrown which means the user is allowed to submit a request
-# one is added to the current requests and then a 60 second timer is started and the wait page is rendered 
+# one is added to the current requests and then a timer is started and the wait page is rendered 
+# the seconds to wait is calculated based off of the value stored in the database, which can be edited on the admin page
 def addAndWait(response):
-    if response.method == 'POST':
-        try:
-            remaining = int(response.COOKIES['allowReload']) - int(time.time())
-            context = {'rem': remaining} 
-            currentTime = time.time() 
-            expirationTime = currentTime + 60
-            cookieValue = int(expirationTime)
-            resp = render(response, 'controller/wait.html', context)
-        except KeyError:
-            requests = requestCount.objects.get(id=1)
-            requests.count += 1
-            requests.save()
-            context = {'rem': 60}
-            currentTime = time.time()
-            expirationTime = currentTime + 60
-            cookieValue = int(expirationTime)
-            resp = render(response, 'controller/wait.html', context)
-            resp.set_cookie('allowReload', cookieValue, max_age=60)
-        return resp
-    else:
+    try:
+        if response.method == 'POST':
+            try:
+                defaultWaitTime = studentWaitTime.objects.get(id=1).studentWaitTime
+                remaining = int(response.COOKIES['allowReload']) - int(time.time())
+                context = {'rem': remaining} 
+                currentTime = time.time() 
+                expirationTime = currentTime + defaultWaitTime
+                cookieValue = int(expirationTime)
+                resp = render(response, 'controller/wait.html', context)
+            except KeyError:
+                defaultWaitTime = studentWaitTime.objects.get(id=1).studentWaitTime
+                requests = requestCount.objects.get(id=1)
+                requests.count += 1
+                requests.save()
+                context = {'rem': defaultWaitTime}
+                currentTime = time.time()
+                expirationTime = currentTime + defaultWaitTime 
+                cookieValue = int(expirationTime)
+                resp = render(response, 'controller/wait.html', context)
+                resp.set_cookie('allowReload', cookieValue, max_age=defaultWaitTime)
+            return resp
+        else:
+            return redirect('index')
+    except:
         return redirect('index')
 
 # admin page view
@@ -52,22 +62,24 @@ def addAndWait(response):
 def adminPageView(request):
     try:
         if (request.user.is_authenticated):
+            defaultWaitTime = studentWaitTime.objects.get(id=1).studentWaitTime
             timeToReset = int(request.COOKIES['resetTime']) - int(time.time())
             resetSetting = requestReset.objects.get(id=1).requestReset
             count = requestCount.objects.get(id=1)
             limit = threshold.objects.get(id=1)
-            return render(request, 'controller/admin.html', {'count':count, 'threshold': limit, 'timeToReset': timeToReset, 'resetSetting': resetSetting})
+            return render(request, 'controller/admin.html', {'count':count, 'threshold': limit, 'timeToReset': timeToReset, 'resetSetting': resetSetting, 'studentWaitTime': defaultWaitTime})
         else:
             return redirect('/login/')
     except KeyError:
         if (request.user.is_authenticated):
+            defaultWaitTime = studentWaitTime.objects.get(id=1).studentWaitTime
             resetSetting = requestReset.objects.get(id=1).requestReset
             count = requestCount.objects.get(id=1)
             limit = threshold.objects.get(id=1)
             currentTime = time.time()
             expirationTime = currentTime + resetSetting
             cookieValue = int(expirationTime)
-            resp = render(request, 'controller/admin.html', {'count':count, 'threshold': limit, 'timeToReset': resetSetting, 'resetSetting': resetSetting})
+            resp = render(request, 'controller/admin.html', {'count':count, 'threshold': limit, 'timeToReset': resetSetting, 'resetSetting': resetSetting, 'studentWaitTime': defaultWaitTime})
             resp.set_cookie('resetTime', cookieValue, max_age=resetSetting)
             return resp
         else:
@@ -107,6 +119,8 @@ def changeThreshold(request):
     else:
         return redirect('/login/')
 
+# uses a cookie to keep track of the time elapsed from the last request reset 
+# lets the admin change how often they want the requests to be reset to zero
 def changeResetSetting(request):
     if (request.user.is_authenticated):
         if request.GET['setting'] == '':
@@ -128,6 +142,7 @@ def changeResetSetting(request):
     else: 
         return redirect('/login/')
 
+# reset the request timer to the max time
 def resetTimer(request):
     if (request.user.is_authenticated):
         resp = redirect('admin')
@@ -140,4 +155,18 @@ def resetTimer(request):
         return resp
     else:
         return redirect('/login/')
-        
+
+# change the time that the student has to wait before requesting again
+def changeStudentWaitTime(request):
+    if (request.user.is_authenticated):
+        if (request.GET['newStudentWaitTime'] == ''):
+            return redirect('admin')
+        else:
+            defaultWaitTime = studentWaitTime.objects.get(id=1)
+            newDefaultWaitTime = int(request.GET['newStudentWaitTime'])
+            newDefaultWaitTime = math.floor(newDefaultWaitTime)
+            defaultWaitTime.studentWaitTime = newDefaultWaitTime
+            defaultWaitTime.save()
+            return redirect('admin')
+    else:
+        return redirect('/login/')

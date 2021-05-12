@@ -83,7 +83,7 @@ body {
 }
 
 .btn-one::before {
-	left: 4px;
+	/* left: 4px; */
 	z-index: 1;
   
   opacity: 0;
@@ -525,3 +525,172 @@ body{
     opacity:0;
   }
 }
+
+
+.toggle-wrapper {
+  position: relative;
+  margin: 30px auto;
+  width: 11.25rem;
+  height: 2.8125rem;
+  font-family: sans-serif;
+  font-size: 0.75rem;
+  font-weight: 100;
+}
+.toggle {
+  display: none;
+}
+.foux-toggle {
+  position: relative;
+  width: 11.25rem;
+  height: 2.8125rem;
+  border-radius: 3px;
+  margin: 0;
+  background-color: #ddd;
+}
+.foux-toggle:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 5.625rem;
+  height: 2.8125rem;
+  background-color: #F3CF14;
+  z-index: 3;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.toggle:checked ~ .foux-toggle:before {
+  border-color: #00a5b5;
+  left: 5.625rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.toggle--label:before, .toggle--label:after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  transition: opacity 0.05s;
+}
+.toggle--label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  line-height: 2.8125rem;
+  cursor: pointer;
+  z-index: 12;
+  letter-spacing: 0.0625rem;
+  font-weight: 400;
+  font-size: 14px;
+}
+.toggle--label:before {
+  content: 'No';
+  left: 25%;
+  transform: translateX(-50%);
+  color: white;
+  opacity: 1;
+}
+.toggle--label:after {
+  content: 'Yes';
+  position: absolute;
+  right: 0;
+  left: 75%;
+  transform: translateX(-50%);
+  color: white;
+  opacity: 1;
+}
+.toggle:checked + .toggle--label:after {
+  transition-duration: 0.05s;
+}
+
+
+.toggle1-wrapper {
+  position: relative;
+  margin: 30px auto;
+  width: 11.25rem;
+  height: 2.8125rem;
+  font-family: sans-serif;
+  font-size: 0.75rem;
+  font-weight: 100;
+}
+.toggle1 {
+  display: none;
+}
+.foux-toggle1 {
+  position: relative;
+  width: 11.25rem;
+  height: 2.8125rem;
+  border-radius: 3px;
+  margin: 0;
+  background-color: #ddd;
+}
+.foux-toggle1:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 5.625rem;
+  height: 2.8125rem;
+  background-color: #F3CF14;
+  z-index: 3;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.toggle1:checked ~ .foux-toggle1:before {
+  border-color: #00a5b5;
+  left: 5.625rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.toggle1--label:before, .toggle1--label:after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  transition: opacity 0.05s;
+}
+.toggle1--label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  line-height: 2.8125rem;
+  cursor: pointer;
+  z-index: 12;
+  letter-spacing: 0.0625rem;
+  font-weight: 400;
+  font-size: 14px;
+}
+.toggle1--label:before {
+  content: 'Off';
+  left: 25%;
+  transform: translateX(-50%);
+  color: white;
+  opacity: 1;
+}
+.toggle1--label:after {
+  content: 'On';
+  position: absolute;
+  right: 0;
+  left: 75%;
+  transform: translateX(-50%);
+  color: white;
+  opacity: 1;
+}
+.toggle1:checked + .toggle--label:after {
+  transition-duration: 0.05s;
+}
+

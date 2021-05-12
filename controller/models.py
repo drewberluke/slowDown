@@ -22,3 +22,9 @@ class requestReset(models.Model):
     def __str__(self):
         return self.requestReset
 
+class studentWaitTime(models.Model):
+    studentWaitTime = models.IntegerField(default=160)
+
+    def __str__(self):
+        return self.studentWaitTime
+

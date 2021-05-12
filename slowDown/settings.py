@@ -33,7 +33,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # only for use durring development, delete before publishing to heroku 
 
-    # secret key goes here durring development
+   # secret key goes here durring development
 
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')   
@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'controller.apps.ControllerConfig',
     'register.apps.RegisterConfig',
     'whitenoise.runserver_nostatic',
-    'crispy_forms'
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [

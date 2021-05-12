@@ -14,7 +14,6 @@ function submitForm() {
     else{
         document.forms['/incrementCount'].submit();
     }
-
 }
 
 //deactivates the button and starts the countdown timer 
@@ -80,7 +79,6 @@ async function cutoff() {
     }
 }
 
-
 function thresh() {
     var limit = parseFloat(document.getElementById('newLimit').value);
     if (Number.isInteger(limit)) {
@@ -90,6 +88,18 @@ function thresh() {
         limit = Math.floor(limit);
         document.getElementById('newLimit').value = limit;
         document.getElementById('newLimit').focus();
+    }    
+}
+
+function studentWaitTime() {
+    var newTime = parseFloat(document.getElementById('newStudentWaitTime').value);
+    if (Number.isInteger(newTime)) {
+        document.getElementById('studentWaitTime').submit();
+    } else {
+        alert("Please enter a whole number");
+        newTime = Math.floor(newTime);
+        document.getElementById('newStudentWaitTime').value = newTime;
+        document.getElementById('newStudentWaitTime').focus();
     }    
 }
 
@@ -112,4 +122,66 @@ function reset() {
 
 function resetTimer() {
     document.getElementById('resetTimer').submit()
+}
+
+function alertInput() {
+    var input = document.getElementById('alertCheckbox');
+
+    if (input.checked == true) {
+        document.cookie = "playAlert=true";
+        //alert(document.cookie);
+    } else {
+        document.cookie = "playAlert=false";
+        //alert(document.cookie);
+    }
+}
+
+function alertStatus() {
+    var name = "playAlert";
+    var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    if (match) {
+        if (match[2] == "true") {
+            document.getElementById('alertCheckbox').checked = true;
+        } else {
+            document.getElementById('alertCheckbox').checked = false;
+        }
+    } else {
+        document.getElementById('alertCheckbox').checked = true;
+        document.cookie = "playAlert=true";
+    }
+}
+
+function timerStatus() {
+    var name = "timerStatus";
+    var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    if (match) {
+        if (match[2] == "on") {
+            //alert('timer On');
+            document.getElementById('requestResetCheckbox').checked = true;
+        } else {
+            //alert('timer off');
+            document.getElementById('requestResetCheckbox').checked = false;
+        }
+    } else {
+        document.getElementById('requestResetCheckbox').checked = true;
+        document.cookie = 'timerStatus=on';
+    }
+}
+
+function timerInput() {
+    var input = document.getElementById('requestResetCheckbox');
+
+    if (input.checked == true) {
+        document.cookie = "timerStatus=on";
+        //alert(document.cookie);
+    } else {
+        document.cookie = "timerStatus=off";
+        //alert(document.cookie);
+    }
+}
+
+function onPageLoad() {
+    cutoff();
+    alertStatus();
+    timerStatus();
 }

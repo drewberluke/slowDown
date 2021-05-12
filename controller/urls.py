@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import indexPageView, addAndWait, adminPageView, resetRequestCount, changeThreshold, changeResetSetting, resetTimer
+from .views import indexPageView, addAndWait, adminPageView, resetRequestCount, changeThreshold, changeResetSetting, resetTimer, changeStudentWaitTime
 
 urlpatterns = [
     path('', indexPageView, name='index'),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('changeThreshold', changeThreshold, name='changeThreshold'),
     path('changeResetSetting', changeResetSetting, name='changeResetSetting'),
     path('resetTimer', resetTimer, name='resetTimer'),
+    path('changeStudentWaitTime', changeStudentWaitTime, name='changeStudentWaitTime'),
 ]
