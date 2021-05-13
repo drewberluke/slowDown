@@ -1,6 +1,6 @@
 import time
 import math 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .models import requestCount, threshold, requestReset, studentWaitTime
 
 # index page view
@@ -170,3 +170,6 @@ def changeStudentWaitTime(request):
             return redirect('admin')
     else:
         return redirect('/login/')
+
+def loader(request):
+    return HttpResponse('loaderio-06425f874f86c9f72b69533f40af5a0c')
