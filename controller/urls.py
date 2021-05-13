@@ -11,5 +11,5 @@ urlpatterns = [
     path('changeResetSetting', changeResetSetting, name='changeResetSetting'),
     path('resetTimer', resetTimer, name='resetTimer'),
     path('changeStudentWaitTime', changeStudentWaitTime, name='changeStudentWaitTime'),
-    path('loaderio-06425f874f86c9f72b69533f40af5a0c', loader, name='loaderio-06425f874f86c9f72b69533f40af5a0c')
+    path('loaderio-06425f874f86c9f72b69533f40af5a0c/', loader, name='loaderio-06425f874f86c9f72b69533f40af5a0c/')
 ]
