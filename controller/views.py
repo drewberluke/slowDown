@@ -15,10 +15,31 @@ def indexPageView(request):
     try:
         try:
             remaining = int(request.COOKIES['allowReload']) - int(time.time()) # check for cookie, calculate the wait time remaining
-            context = {'rem': remaining} # set the number of seconds left equal to rem in the context to be sent to the template 
+            currentRequests = requestCount.objects.get(id=1).count
+            currentThreshold = threshold.objects.get(id=1).threshold 
+            pct = (currentRequests / currentThreshold) * 100
+            align = 'right'
+            space = getSpace(pct)
+            if currentRequests >= currentThreshold:
+                currentRequests = "Dr. Gaskin has been notified"
+                pct = 100
+                currentThreshold = ''
+                align = 'center'
+            context = {'rem': remaining, 'current': currentRequests, 'threshold': currentThreshold, 'pct': pct, 'align': align, 'space': space} # set the number of seconds left equal to rem in the context to be sent to the template 
             return render(request, 'controller/wait.html', context) # render the template and send the time remaining to be displayed on the wait page
         except KeyError: # if a key error exception is thrown that means there is no cookie so the index page is displayed normally 
-            return render(request, 'controller/index.html')
+            currentRequests = requestCount.objects.get(id=1).count
+            currentThreshold = threshold.objects.get(id=1).threshold 
+            pct = (currentRequests / currentThreshold) * 100
+            align = 'right'
+            space = getSpace(pct)
+            if currentRequests >= currentThreshold:
+                currentRequests = "Dr. Gaskin has been notified"
+                pct = 100
+                currentThreshold = ''
+                align = 'center'
+            context = {'current': currentRequests, 'threshold': currentThreshold, 'pct': pct, 'align': align, 'space': space} 
+            return render(request, 'controller/index.html', context)
     except:
         return redirect('index')
 
@@ -34,7 +55,17 @@ def addAndWait(response):
             try:
                 defaultWaitTime = studentWaitTime.objects.get(id=1).studentWaitTime
                 remaining = int(response.COOKIES['allowReload']) - int(time.time())
-                context = {'rem': remaining} 
+                currentRequests = requestCount.objects.get(id=1).count
+                currentThreshold = threshold.objects.get(id=1).threshold 
+                pct = (currentRequests / currentThreshold) * 100
+                align = 'right'
+                space = getSpace(pct)
+                if currentRequests >= currentThreshold:
+                    currentRequests = "Dr. Gaskin has been notified"
+                    pct = 100
+                    currentThreshold = ''
+                    align = 'center'
+                context = {'rem': remaining, 'current': currentRequests, 'threshold': currentThreshold, 'pct': pct, 'align': align, 'space': space} 
                 currentTime = time.time() 
                 expirationTime = currentTime + defaultWaitTime
                 cookieValue = int(expirationTime)
@@ -44,7 +75,18 @@ def addAndWait(response):
                 requests = requestCount.objects.get(id=1)
                 requests.count += 1
                 requests.save()
-                context = {'rem': defaultWaitTime}
+                currentRequests = requestCount.objects.get(id=1).count
+                currentThreshold = threshold.objects.get(id=1).threshold 
+                pct = (currentRequests / currentThreshold) * 100
+                align = 'right'
+                space = getSpace(pct)
+                if currentRequests >= currentThreshold:
+                    currentRequests = "Dr. Gaskin has been notified"
+                    pct = 100
+                    currentThreshold = ''
+                    align = 'center'
+                    defaultWaitTime = ''
+                context = {'rem': defaultWaitTime, 'current': currentRequests, 'threshold': currentThreshold, 'pct': pct, 'align': align, 'space': space}
                 currentTime = time.time()
                 expirationTime = currentTime + defaultWaitTime 
                 cookieValue = int(expirationTime)
@@ -59,31 +101,40 @@ def addAndWait(response):
 # admin page view
 # this function pulls the current requests and the threshold from the database and sends them when the admin page is rendered 
 # the admin page is only shown if the user is logged in, if not logged in the user is redirected to the login page 
+# calculates time since last login and if it has been more than 4 hours automatically logs out 
 def adminPageView(request):
-    try:
-        if (request.user.is_authenticated):
-            defaultWaitTime = studentWaitTime.objects.get(id=1).studentWaitTime
-            timeToReset = int(request.COOKIES['resetTime']) - int(time.time())
-            resetSetting = requestReset.objects.get(id=1).requestReset
-            count = requestCount.objects.get(id=1)
-            limit = threshold.objects.get(id=1)
-            return render(request, 'controller/admin.html', {'count':count, 'threshold': limit, 'timeToReset': timeToReset, 'resetSetting': resetSetting, 'studentWaitTime': defaultWaitTime})
-        else:
-            return redirect('/login/')
-    except KeyError:
-        if (request.user.is_authenticated):
-            defaultWaitTime = studentWaitTime.objects.get(id=1).studentWaitTime
-            resetSetting = requestReset.objects.get(id=1).requestReset
-            count = requestCount.objects.get(id=1)
-            limit = threshold.objects.get(id=1)
-            currentTime = time.time()
-            expirationTime = currentTime + resetSetting
-            cookieValue = int(expirationTime)
-            resp = render(request, 'controller/admin.html', {'count':count, 'threshold': limit, 'timeToReset': resetSetting, 'resetSetting': resetSetting, 'studentWaitTime': defaultWaitTime})
-            resp.set_cookie('resetTime', cookieValue, max_age=resetSetting)
-            return resp
-        else:
-            return redirect('/login/')
+    lastLogin = request.user.last_login
+    currentTime = time.time()
+    lastLogin = time.mktime(lastLogin.timetuple())
+    minSinceLastLogin = (currentTime - lastLogin) / 60
+    # print('*** ' + str(minSinceLastLogin))
+    if minSinceLastLogin > 240:
+        return redirect('/logout/')
+    else:    
+        try:
+            if (request.user.is_authenticated):
+                defaultWaitTime = studentWaitTime.objects.get(id=1).studentWaitTime
+                timeToReset = int(request.COOKIES['resetTime']) - int(time.time())
+                resetSetting = requestReset.objects.get(id=1).requestReset
+                count = requestCount.objects.get(id=1)
+                limit = threshold.objects.get(id=1)
+                return render(request, 'controller/admin.html', {'count':count, 'threshold': limit, 'timeToReset': timeToReset, 'resetSetting': resetSetting, 'studentWaitTime': defaultWaitTime})
+            else:
+                return redirect('/login/')
+        except KeyError:
+            if (request.user.is_authenticated):
+                defaultWaitTime = studentWaitTime.objects.get(id=1).studentWaitTime
+                resetSetting = requestReset.objects.get(id=1).requestReset
+                count = requestCount.objects.get(id=1)
+                limit = threshold.objects.get(id=1)
+                currentTime = time.time()
+                expirationTime = currentTime + resetSetting
+                cookieValue = int(expirationTime)
+                resp = render(request, 'controller/admin.html', {'count':count, 'threshold': limit, 'timeToReset': resetSetting, 'resetSetting': resetSetting, 'studentWaitTime': defaultWaitTime})
+                resp.set_cookie('resetTime', cookieValue, max_age=resetSetting)
+                return resp
+            else:
+                return redirect('/login/')
 
 # this function is called when the count exceeds the threshold or the admin wants to reset the count to 0
 def resetRequestCount(response):
@@ -173,3 +224,20 @@ def changeStudentWaitTime(request):
 
 def loader(request):
     return HttpResponse('loaderio-06425f874f86c9f72b69533f40af5a0c')
+
+
+
+def getSpace(pct):  
+    space = ''
+    if pct > 0 and pct < 11:
+        pct2 = pct/2
+        pct2 = math.floor(pct2)
+        pct2 = pct2 + 1
+        if pct2 > 3:
+            pct2 = pct2 + 1
+        for x in range(0, pct2):
+            space = space + '&nbsp;'
+        return space
+    else:
+        space = '&nbsp;'
+        return space

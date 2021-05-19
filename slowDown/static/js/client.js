@@ -185,3 +185,7 @@ function onPageLoad() {
     alertStatus();
     timerStatus();
 }
+
+function refresh() {
+    window.location.href = '/';
+}
