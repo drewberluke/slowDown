@@ -35,8 +35,9 @@
   font-family: 'Cardo', serif;
   font-size: 2rem;
   line-height: 2rem;
-  margin-left: 20.5%;
-  margin-right: 20.5%;
+  margin-left: 20%;
+  margin-right: 20%;
+  width: 60%;
   margin-top: 5%;
 }
 
@@ -772,6 +773,11 @@ body{
     border-bottom: white solid thin;
     border-right: none;
   }
+
+  .border-b {
+    width: 90%;
+    margin: auto;
+  }
 }
 
 @media screen and (max-width: 1131px) {
@@ -780,5 +786,40 @@ body{
   }
   p {
     font-size: 2.5rem;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .login-form {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .login-form {
+    width: 60%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .login-form {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .border-r {
+    border-right: none;
+    border-bottom: none;
+  }
+
+  .border-b {
+    border-bottom: none;
+  }
+
+  .mobile-border {
+    width: 90%;
+    margin: auto;
+    border-bottom: white solid thin;
   }
 }
