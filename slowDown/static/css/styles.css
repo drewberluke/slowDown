@@ -808,6 +808,10 @@ body{
 }
 
 @media screen and (max-width: 400px) {
+  .login-form {
+    width: 85%;
+  }
+
   .border-r {
     border-right: none;
     border-bottom: none;
