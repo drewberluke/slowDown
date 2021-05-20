@@ -8,23 +8,23 @@ class requestCount(models.Model):
     count = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.count 
+        return str(self.count)
 
 class threshold(models.Model):
     threshold = models.IntegerField(default=20)
 
     def __str__(self):
-        return self.threshold
+        return str(self.threshold)
 
 class requestReset(models.Model):
     requestReset = models.IntegerField(default=160)
 
     def __str__(self):
-        return self.requestReset
+        return str(self.requestReset)
 
 class studentWaitTime(models.Model):
     studentWaitTime = models.IntegerField(default=160)
 
     def __str__(self):
-        return self.studentWaitTime
+        return str(self.studentWaitTime)
 

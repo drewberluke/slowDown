@@ -768,6 +768,10 @@ body{
   padding-bottom: 0rem;
 }
 
+.mobile-border {
+  display: none;
+}
+
 @media screen and (max-width: 767px){
   .border-r {
     border-bottom: white solid thin;
@@ -826,6 +830,7 @@ body{
   }
 
   .mobile-border {
+    display: block;
     width: 90%;
     margin: auto;
     border-bottom: white solid thin;
