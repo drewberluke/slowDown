@@ -754,3 +754,31 @@ body{
   font-family: 'Montserrat', sans-serif;
   line-height: 1.8rem;
 }
+
+.border-b {
+  border-bottom: white solid thin;
+}
+
+.border-r {
+  border-right: white solid thin;
+}
+
+.loader {
+  padding-bottom: 0rem;
+}
+
+@media screen and (max-width: 767px){
+  .border-r {
+    border-bottom: white solid thin;
+    border-right: none;
+  }
+}
+
+@media screen and (max-width: 1131px) {
+  .loader {
+    padding-bottom: 3rem;
+  }
+  p {
+    font-size: 2.5rem;
+  }
+}

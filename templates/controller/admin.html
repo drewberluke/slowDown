@@ -25,11 +25,11 @@
 </header>
 <main>
     <div class="container">
-        <div class="row" style="border-bottom: white solid thin;">
-            <div class="col padding" style="border-right: white solid thin;">
+        <div class="row border-b">
+            <div class="col padding border-r">
                 <div>
                     <p class="text-center admin-p">Current number of requests:</p>
-                    <p class="current-req admin-p" id="clickCount">{{count.count}}</p>
+                    <p class="current-req admin-p" id="clickCount">{{count}}</p>
                 </div>
                 <!--sends the /delete form which deletes all records and reloads the page-->
                 <div class="">
@@ -55,21 +55,21 @@
                         </div>
                     </form>
                     <div class="toggle1-wrapper">
-                        <input id="requestResetCheckbox" class="toggle1" type="checkbox" onclick="timerInput()" checked />
+                        <input id="requestResetCheckbox" class="toggle1" type="checkbox" onclick="timerInput()" {{timerStatus}} />
                         <label for="requestResetCheckbox" class="toggle1--label"></label>
                         <div class="foux-toggle1"></div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row" style="border-bottom: white solid thin;">
-            <div class="col padding">
+        <div class="row border-b">
+            <div class="col padding border-r">
                 <!--CHANGE CUTOFF THRESHOLD HERE!! change the value here to allow for more or less clicks before being alerted-->
                 <div class="">
                     <form action="{% url 'changeThreshold' %}" method="GET" class="text-center" id="thresh">
                         {% csrf_token %}
                         <p class="text-center admin-p" for="cutoff">Alert cutoff threshold:</p>
-                        <p class="current-req admin-p" id="limit">{{threshold.threshold}}</p>
+                        <p class="current-req admin-p" id="limit">{{threshold}}</p>
                         <input id="newLimit" class="thresh-input" name='limit' type="number" min="0"
                             placeholder="Change threshold here"><br>
                         <div class="btn btn-one" onclick="thresh()">
@@ -78,7 +78,7 @@
                     </form>
                 </div>
             </div>
-            <div class="col padding" style="border-left: white solid thin;">
+            <div class="col padding">
                 <div class="">
                     <form action="{% url 'changeResetSetting' %}" method="GET" class="text-center" id="resetSetting">
                         {% csrf_token %}
@@ -94,7 +94,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col padding" style="border-right: white solid thin;">
+            <div class="col padding border-r">
                 <div class="">
                     <form action="{% url 'changeStudentWaitTime' %}" method="GET" class="text-center" id="studentWaitTime">
                         {% csrf_token %}
@@ -112,7 +112,7 @@
                 <div class="">
                     <p class="text-center admin-p">Play alert sound?</p>
                     <div class="toggle-wrapper">
-                        <input id="alertCheckbox" class="toggle" type="checkbox" onclick="alertInput()" checked />
+                        <input id="alertCheckbox" class="toggle" type="checkbox" onclick="alertInput()" {{alertStatus}} />
                         <label for="alertCheckbox" class="toggle--label"></label>
                         <div class="foux-toggle"></div>
                     </div>
@@ -140,7 +140,13 @@
         alert({{count.count}} + ' or more people have requested that you slow down');
     }
 
-    var seconds = {{timeToReset}}
+    var seconds = "{{timeToReset}}";
+
+    seconds = parseInt(seconds);
+
+    if (isNaN(seconds)){
+        seconds = '--';
+    }
 
     var counter = setInterval(timer, 1000);
 
@@ -148,6 +154,7 @@
         var name = 'timerStatus';
         var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
         if (match[2] == "on") {
+            if (isNaN(seconds)){wait(1000);}
             seconds = seconds - 1;
             if (seconds <= -1) {
                 clearInterval(counter);

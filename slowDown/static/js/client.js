@@ -128,10 +128,10 @@ function alertInput() {
     var input = document.getElementById('alertCheckbox');
 
     if (input.checked == true) {
-        document.cookie = "playAlert=true";
+        document.cookie = "playAlert=true;expires=Fri, 01 Jan 2100 00:00:00 UTC;path=/admin";
         //alert(document.cookie);
     } else {
-        document.cookie = "playAlert=false";
+        document.cookie = "playAlert=false;expires=Fri, 01 Jan 2100 00:00:00 UTC;path=/admin";
         //alert(document.cookie);
     }
 }
@@ -147,7 +147,7 @@ function alertStatus() {
         }
     } else {
         document.getElementById('alertCheckbox').checked = true;
-        document.cookie = "playAlert=true";
+        document.cookie = "playAlert=true;expires=Fri, 01 Jan 2100 00:00:00 UTC;path=/admin";
     }
 }
 
@@ -164,7 +164,7 @@ function timerStatus() {
         }
     } else {
         document.getElementById('requestResetCheckbox').checked = true;
-        document.cookie = 'timerStatus=on';
+        document.cookie = "timerStatus=on;expires=Fri, 01 Jan 2100 00:00:00 UTC;path=/admin";
     }
 }
 
@@ -172,10 +172,11 @@ function timerInput() {
     var input = document.getElementById('requestResetCheckbox');
 
     if (input.checked == true) {
-        document.cookie = "timerStatus=on";
+        document.cookie = "timerStatus=on;expires=Fri, 01 Jan 2100 00:00:00 UTC;path=/admin";
+        location.reload();
         //alert(document.cookie);
     } else {
-        document.cookie = "timerStatus=off";
+        document.cookie = "timerStatus=off;expires=Fri, 01 Jan 2100 00:00:00 UTC;path=/admin";
         //alert(document.cookie);
     }
 }
@@ -186,6 +187,6 @@ function onPageLoad() {
     timerStatus();
 }
 
-function refresh() {
+function loadIndex() {
     window.location.href = '/';
 }
