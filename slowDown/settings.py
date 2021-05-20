@@ -33,13 +33,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # only for use durring development, delete before publishing to heroku 
 
-   # secret key goes here durring development
+  # secret key goes here durring development
 
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')   
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = False # change to False before deployment
 
 ALLOWED_HOSTS = ['0.0.0.0','localhost','127.0.0.1','slow-down.herokuapp.com']
 

@@ -116,8 +116,8 @@ function resetSetting() {
     
 }
 
-function reset() {
-    document.getElementById('/delete').submit()
+function resetReq() {
+    document.getElementById('deleteReq').submit()
 }
 
 function resetTimer() {

@@ -32,11 +32,11 @@
                     <p class="current-req admin-p" id="clickCount">{{count}}</p>
                 </div>
                 <!--sends the /delete form which deletes all records and reloads the page-->
-                <div class="">
-                    <form action="{% url 'resetRequestCount' %}" method="GET" id="/delete" class="reset">
+                <div>
+                    <form action="{% url 'resetRequestCount' %}" method="GET" id="deleteReq" class="reset">
                         {% csrf_token %}
-                        <div class="btn btn-one" onclick="reset()">
-                            <p class="btn-text admin-p">Reset Requests</p>
+                        <div class="btn btn-one" onclick="resetReq()">
+                            <p class="btn-text admin-p" onclick="resetReq()">Reset Requests</p>
                         </div>
                     </form>
                 </div>
@@ -56,7 +56,8 @@
                         </div>
                     </form>
                     <div class="toggle1-wrapper">
-                        <input id="requestResetCheckbox" class="toggle1" type="checkbox" onclick="timerInput()" {{timerStatus}} />
+                        <input id="requestResetCheckbox" class="toggle1" type="checkbox" onclick="timerInput()"
+                            {{timerStatus}} />
                         <label for="requestResetCheckbox" class="toggle1--label"></label>
                         <div class="foux-toggle1"></div>
                     </div>
@@ -100,12 +101,13 @@
         <div class="row">
             <div class="col padding border-r">
                 <div class="">
-                    <form action="{% url 'changeStudentWaitTime' %}" method="GET" class="text-center" id="studentWaitTime">
+                    <form action="{% url 'changeStudentWaitTime' %}" method="GET" class="text-center"
+                        id="studentWaitTime">
                         {% csrf_token %}
                         <p class="text-center admin-p">Student's wait-time (seconds):</p>
                         <p class="current-req admin-p">{{studentWaitTime}}</p>
-                        <input id="newStudentWaitTime" class="thresh-input" name='newStudentWaitTime' type="number" min="0"
-                            placeholder="Change wait-time here"><br>
+                        <input id="newStudentWaitTime" class="thresh-input" name='newStudentWaitTime' type="number"
+                            min="0" placeholder="Change wait-time here"><br>
                         <div class="btn btn-one" onclick="studentWaitTime()">
                             <p class="btn-text">Submit</p>
                         </div>
@@ -117,7 +119,8 @@
                 <div class="">
                     <p class="text-center admin-p">Play alert sound?</p>
                     <div class="toggle-wrapper">
-                        <input id="alertCheckbox" class="toggle" type="checkbox" onclick="alertInput()" {{alertStatus}} />
+                        <input id="alertCheckbox" class="toggle" type="checkbox" onclick="alertInput()"
+                            {{alertStatus}} />
                         <label for="alertCheckbox" class="toggle--label"></label>
                         <div class="foux-toggle"></div>
                     </div>
@@ -129,8 +132,8 @@
 </main>
 <!--Reloads this page every 10 seconds (can be adjusted here for more or less time) in order to keep an accurate count-->
 <script>
-   setTimeout(function () {
-       location.reload();
+    setTimeout(function () {
+        location.reload();
     }, 10000);
 
     // alert sound used asynchronous function so that the sound will play before other scripts take over
@@ -149,7 +152,7 @@
 
     seconds = parseInt(seconds);
 
-    if (isNaN(seconds)){
+    if (isNaN(seconds)) {
         seconds = '--';
     }
 
@@ -159,14 +162,16 @@
         var name = 'timerStatus';
         var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
         if (match[2] == "on") {
-            if (isNaN(seconds)){wait(1000);}
+            if (isNaN(seconds)) {
+                wait(1000);
+            }
             seconds = seconds - 1;
             if (seconds <= -1) {
                 clearInterval(counter);
                 return;
             }
             document.getElementById('counter').innerHTML = seconds;
-    
+
             if (seconds == 0) {
                 //document.forms['/back'].submit();
                 window.location.href = '/resetRequestCount';
