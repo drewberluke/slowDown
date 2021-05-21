@@ -75,7 +75,7 @@ async function cutoff() {
         playAlert();
         await new Promise((resolve, reject) => setTimeout(resolve, 3000));
         //alert('Slow down please!');
-        document.forms['/delete'].submit();
+        document.forms['deleteReq'].submit();
     }
 }
 
